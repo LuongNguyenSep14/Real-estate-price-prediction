@@ -1,15 +1,35 @@
 import json
 import pickle
+import numpy as np
 
 # define global variables
 __locations = None
 __data_columns = None
 __model = None
 
+# this function is used to predict price of a house with input data
+def get_estimated_price(location, sqft, bhk, bath):
+    try:
+        loc_index = __data_columns.index(location.lower())
+    except:
+        loc_index = -1
 
+    x = np.zeros(len(__data_columns))
+    x[0] = sqft
+    x[1] = bath
+    x[2] = bhk
+    
+    if loc_index >= 0:
+        x[loc_index] = 1
+
+    return __model.predcit([x])
+
+# this function is used to get all name of locations
+# in dataset
 def get_location_names():
     return __locations
 
+# load all column'names into global variables
 def load_saved_artifacts():
     print('loading saved artifacts...start')
     global __locations
